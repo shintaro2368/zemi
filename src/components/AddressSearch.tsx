@@ -1,7 +1,7 @@
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { LS_ADDRESSES, SEARCH_API } from "../lib/constants";
-import { addressesAtom } from "../lib/global-state";
+import { addressesAtom, currentCenterAtom } from "../lib/global-state";
 
 export default function AddressSearch() {
   const [address, setAddress] = useState("");
@@ -10,6 +10,7 @@ export default function AddressSearch() {
   const [showDialog, setShowDialog] = useState(false);
 
   const setAddresses = useSetAtom(addressesAtom);
+  const setCurrentCenter = useSetAtom(currentCenterAtom);
 
   async function handleSearch() {
     setIsSearch(true);
@@ -36,6 +37,11 @@ export default function AddressSearch() {
         }
 
         setAddresses((prev) => [...prev, newAddress]);
+        setCurrentCenter({
+          id: newAddress.id,
+          lat: newAddress.lat,
+          lng: newAddress.lng,
+        });
       } else {
         alert(
           "住所から緯度経度を検索することができませんでした。\n入力内容をご確認ください。"
@@ -76,7 +82,14 @@ export default function AddressSearch() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">エリア作成</h5>
-                <button type="button" className="btn-close"></button>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => {
+                    setAreaName("");
+                    setShowDialog(false);
+                  }}
+                ></button>
               </div>
               <div className="modal-body">
                 <p>エリアの名前を入力してください。</p>
@@ -85,6 +98,7 @@ export default function AddressSearch() {
                   className="form-control"
                   value={areaName}
                   onChange={(e) => setAreaName(e.target.value)}
+                  ref={(ie) => ie?.focus()}
                 />
               </div>
               <div className="modal-footer">

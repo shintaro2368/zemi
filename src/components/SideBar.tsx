@@ -1,8 +1,8 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   BASE_MAP,
-  HAZARD_DOZEKIRYU,
   HAZARD_KOZUI,
+  HAZARD_NAISUI,
   HAZARD_TAKASHIO,
   HAZARD_THUNAMI,
   LS_ADDRESSES,
@@ -10,7 +10,12 @@ import {
   OVERE_VIEW_MAP,
   WHITE_MAP,
 } from "../lib/constants";
-import { addressesAtom, hazardUrlAtom, mapUrlAtom } from "../lib/global-state";
+import {
+  addressesAtom,
+  currentCenterAtom,
+  hazardUrlAtom,
+  mapUrlAtom,
+} from "../lib/global-state";
 import AddressSearch from "./AddressSearch";
 
 export default function SideBar() {
@@ -18,6 +23,8 @@ export default function SideBar() {
   const setAddresses = useSetAtom(addressesAtom);
   const setMapUrl = useSetAtom(mapUrlAtom);
   const setHazardUrl = useSetAtom(hazardUrlAtom);
+  const setCurrentCenter = useSetAtom(currentCenterAtom);
+  const currentCenterValue = useAtomValue(currentCenterAtom);
 
   const mapTypes: MapInfo[] = [BASE_MAP, OVERE_VIEW_MAP, WHITE_MAP];
   const hazardTypes: MapInfo[] = [
@@ -25,7 +32,7 @@ export default function SideBar() {
     HAZARD_KOZUI,
     HAZARD_TAKASHIO,
     HAZARD_THUNAMI,
-    HAZARD_DOZEKIRYU,
+    HAZARD_NAISUI,
   ];
 
   function handleDelete(id: number) {
@@ -93,7 +100,22 @@ export default function SideBar() {
         {addressesValue.length === 0 && <p>保存されたエリアはありません。</p>}
         <ul className="list-group">
           {addressesValue.map((address) => (
-            <li key={address.id} className="list-group-item">
+            <li
+              role="button"
+              key={address.id}
+              className={`list-group-item ${
+                currentCenterValue.id === address.id
+                  ? "bg-success text-white"
+                  : ""
+              }`}
+              onClick={() => {
+                setCurrentCenter({
+                  id: address.id,
+                  lat: address.lat,
+                  lng: address.lng,
+                });
+              }}
+            >
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0">{address.name}</p>
                 <button
