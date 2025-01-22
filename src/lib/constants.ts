@@ -44,7 +44,7 @@ export const HAZARD_TAKASHIO: Readonly<MapInfo> = {
 export const HAZARD_THUNAMI: Readonly<MapInfo> = {
   NAME: "津波浸水想定地域",
   TILE_URL:
-    "https://disaportaldata.gsi.go.jp/raster/03_hightide_l2_shinsuishin_data/{z}/{x}/{y}.png",
+    "https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png",
 };
 
 export const HAZARD_NAISUI: Readonly<MapInfo> = {
